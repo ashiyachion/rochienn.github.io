@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>页面不存在 | ashiya 的小站</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("ashiya_theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") {
+        t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    .nf-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .nf-card { max-width: 440px; text-align: center; gap: 14px; align-items: center; }
+    .nf-code { font-size: 3.4rem; font-weight: 800; color: var(--accent-primary); line-height: 1; }
+  </style>
+</head>
+<body>
+  <div class="ambient-canvas" aria-hidden="true">
+    <div class="ambient-grid"></div>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+  </div>
+  <main class="nf-wrap">
+    <div class="bento-card nf-card">
+      <div class="nf-code mono">404</div>
+      <h1 class="section-title">这一页走丢了</h1>
+      <p class="section-subtitle">链接可能写错了，或者这篇内容已经被搬走。</p>
+      <a class="btn btn-primary" href="/">回到小站首页</a>
+    </div>
+  </main>
+</body>
+</html>
