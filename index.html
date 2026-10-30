@@ -1,283 +1,410 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ashiya 的小站</title>
-  <meta name="description" content="ashiya 的个人小站：听歌、虚拟偶像直播，以及慢慢学着做的小项目。" />
-  <link rel="canonical" href="https://ashiyachion.me/" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ashiya · 個人主頁</title>
+  <meta name="description" content="ashiya 的個人主頁。住在台北，聽著日系歌寫 Python，折騰 AI Bot 與 Minecraft 模組服。">
+  <meta name="author" content="ashiya">
+  <link rel="canonical" href="https://ashiyachion.me/">
 
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="ashiya 的小站" />
-  <meta property="og:title" content="ashiya 的小站" />
-  <meta property="og:description" content="听歌、虚拟偶像直播，以及慢慢学着做的小项目。" />
-  <meta property="og:url" content="https://ashiyachion.me/" />
-  <meta property="og:locale" content="zh_CN" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ashiya">
+  <meta property="og:title" content="ashiya · 個人主頁">
+  <meta property="og:description" content="住在台北，聽著日系歌寫 Python，折騰 AI Bot 與 Minecraft 模組服。">
+  <meta property="og:url" content="https://ashiyachion.me/">
+  <meta property="og:locale" content="zh_TW">
+  <meta name="twitter:card" content="summary">
 
-  <meta name="theme-color" content="#fff9fa" />
-  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <meta name="theme-color" content="#f6f3ec">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- 在渲染前确定主题，避免深色模式下首屏闪白 -->
   <script>
+    /* 在畫面出現前決定主題，避免深淺色閃一下：
+       先用訪客自己選過的（存在 localStorage），沒選過就跟隨系統設定。 */
     (function () {
-      var t = null;
-      try { t = localStorage.getItem("ashiya_theme"); } catch (e) {}
-      if (t !== "light" && t !== "dark") {
-        t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      document.documentElement.setAttribute("data-theme", t);
+      var root = document.documentElement;
+      var saved = null;
+      root.classList.add('js');
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var dark = saved === 'dark' || saved === 'light'
+        ? saved === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#0a0d1a' : '#f6f3ec');
     })();
   </script>
 
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/main.js" defer></script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "ashiya",
+      "url": "https://ashiyachion.me/",
+      "sameAs": ["https://github.com/ashiyachion"]
+    }
+  </script>
 </head>
+
 <body>
-  <a class="skip-link" href="#main">跳到正文</a>
+  <a class="skip-link" href="#main">跳到主要內容</a>
 
-  <div class="ambient-canvas" aria-hidden="true">
-    <div class="ambient-grid"></div>
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
-  </div>
+  <!-- 深色模式的星空，由 assets/main.js 畫出來 -->
+  <canvas class="sky" aria-hidden="true"></canvas>
 
-  <header class="site-header">
-    <nav class="navbar-glass" aria-label="主导航">
-      <a href="#overview" class="brand-link">
-        <span class="brand-mark" aria-hidden="true">A</span>
-        <span class="brand-name">ashiya 的小站</span>
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="ashiya，回到頁首">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span>ashiya</span>
       </a>
 
-      <ul class="nav-links">
-        <li><a href="#overview" class="nav-link">首页</a></li>
-        <li><a href="#projects" class="nav-link">项目</a></li>
-        <li><a href="#notes" class="nav-link">随笔</a></li>
-        <li><a href="#about-site" class="nav-link">关于</a></li>
-      </ul>
+      <nav class="nav" aria-label="主選單">
+        <a href="#about">關於</a>
+        <a href="#projects">作品</a>
+        <a href="#music">在聽</a>
+        <a href="#contact">聯絡</a>
+      </nav>
 
-      <div class="nav-actions">
-        <button type="button" class="cmd-trigger" id="cmd-trigger-btn" aria-label="搜索（Ctrl + K）">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="cmd-trigger-text">搜索</span>
-          <kbd class="cmd-kbd mono">Ctrl K</kbd>
-        </button>
-
-        <button type="button" class="icon-btn" id="theme-toggle-btn" aria-label="切换深色模式" aria-pressed="false">
-          <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-          <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-        </button>
-
-        <a data-github-link hidden target="_blank" rel="noopener noreferrer" class="icon-btn" aria-label="GitHub">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-        </a>
-      </div>
-    </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="切換深色或淺色主題" title="切換深色或淺色主題">
+        <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+    </div>
   </header>
 
-  <main id="main" class="main-container">
-    <noscript>
-      <p class="noscript-hint">本站的大部分内容需要 JavaScript 才能显示，请开启后刷新页面。</p>
-    </noscript>
+  <main id="main">
+    <!-- ===== 開場 ===== -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="orb" aria-hidden="true"></div>
 
-    <section id="overview" aria-label="个人概览">
-      <div class="bento-grid">
-        <!-- 个人介绍 -->
-        <article class="bento-card card-col-7 hero-bio-card">
-          <div>
-            <div class="hero-top-row">
-              <div class="avatar-ring" aria-hidden="true">
-                <div class="avatar-inner">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/><path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"/></svg>
-                </div>
-              </div>
-              <button type="button" class="status-pill" id="status-switcher" aria-label="当前状态，点击切换">
-                <span class="status-dot" aria-hidden="true"></span>
-                <span id="status-text" aria-live="polite">正在听歌，顺便写一点 Python 脚本</span>
-              </button>
+      <div class="container">
+        <p class="hero-meta">
+          <span class="meta-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            台北 <span class="clock" data-clock hidden></span>
+          </span>
+          <span class="meta-item">UTC+8</span>
+        </p>
+
+        <h1 class="hero-title" id="hero-title">
+          <span data-greeting>你好</span>，<br>
+          我是 <span class="name">ashiya</span>。
+        </h1>
+
+        <p class="hero-lead">住在台北。平常一邊聽日系歌，一邊寫 Python 腳本；最近在折騰 AI Bot 和 Minecraft 模組服，想讓大模型「住進」群聊和遊戲裡。</p>
+
+        <a class="now-playing" href="#music">
+          <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="now-text">
+            <span class="now-label">正在循環</span>
+            <span class="now-song"><b lang="ja" data-now-title>群青</b><span class="now-sep"> — </span><span lang="ja" data-now-artist>YOASOBI</span></span>
+          </span>
+        </a>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="#projects">
+            看看作品
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/ashiyachion" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 01 關於 ===== -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="section-label"><span>01</span>About</p>
+          <h2 id="about-title">關於我</h2>
+        </header>
+
+        <div class="about-grid">
+          <div class="prose" data-reveal>
+            <p>嗨，我是 ashiya。我喜歡把重複的事交給程式——表格整理、資料清洗這類工作，能寫成腳本，就不想手動做第二次。</p>
+            <p>最近的樂趣，是給大模型一個角色、一段記憶，再把它放進群聊或 Minecraft 伺服器，看看它會長成什麼樣子。</p>
+            <p>寫東西的時候，背景通常是日系歌，或是虛擬偶像的歌回與雜談直播；週末會補一補聯動企劃，順手記下好笑的名場面。</p>
+
+            <div class="likes">
+              <p class="mini-label">喜歡的東西</p>
+              <ul class="tags">
+                <li>日系歌</li>
+                <li>虛擬偶像直播</li>
+                <li>Python 自動化</li>
+                <li>AI Bot</li>
+                <li>Minecraft</li>
+                <li>架網站</li>
+              </ul>
             </div>
-
-            <h1 class="hero-greeting">你好，我是 <span class="highlight-name">ashiya</span></h1>
-            <p class="hero-desc">
-              欢迎来到我的小站。平时喜欢听歌、看虚拟偶像直播，也在慢慢学着做自己的小项目：用脚本处理繁琐的表格，给群聊写有性格的 Bot，让 AI 进到 Minecraft 里陪我玩。
-            </p>
-            <ul class="identity-tags" id="hero-tags" aria-label="兴趣标签"></ul>
           </div>
 
-          <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary">
-              <span>看看小项目</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-            <a href="#notes" class="btn btn-secondary">读随笔</a>
-            <a data-github-link hidden target="_blank" rel="noopener noreferrer" class="btn btn-secondary">GitHub</a>
-          </div>
-        </article>
-
-        <!-- 最近在听 -->
-        <article class="bento-card card-col-5 music-card" id="music-card" aria-labelledby="music-heading">
-          <div class="card-header-mini">
-            <h2 class="card-label" id="music-heading">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-              <span>最近单曲循环</span>
-            </h2>
-            <div class="player-btns">
-              <button type="button" class="ctrl-btn" id="btn-prev-track" aria-label="上一首">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-              <button type="button" class="ctrl-btn" id="btn-next-track" aria-label="下一首">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-              </button>
+          <aside class="card now-card" data-reveal aria-labelledby="now-title">
+            <div class="now-card-head">
+              <h3 id="now-title">最近</h3>
+              <p class="mini-label">更新於 <time datetime="2026-10-30">2026.10.30</time></p>
             </div>
-          </div>
+            <ul class="now-list">
+              <li>寫 Python 腳本，順便聽歌</li>
+              <li>看虛擬偶像的直播切片充電</li>
+              <li>折騰 AI Bot 與 Minecraft</li>
+              <li>把這個網站從零重寫了一遍</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
 
-          <div class="music-player-body">
-            <div class="vinyl-stage">
-              <div class="vinyl-disc" id="vinyl-disc" aria-hidden="true"><div class="vinyl-hole"></div></div>
-              <div class="track-meta" aria-live="polite">
-                <span class="track-mood-badge" id="track-mood"></span>
-                <div class="track-title" id="track-title"></div>
-                <div class="track-artist" id="track-artist"></div>
-              </div>
-              <a class="listen-link" id="track-listen" href="#" target="_blank" rel="noopener noreferrer" aria-label="在网易云音乐中收听">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7 4 20 12 7 20 7 4"/></svg>
-                <span>去听</span>
+    <!-- ===== 02 作品 =====
+         新增作品：複製一整個 <article class="card project">，改掉文字即可。
+         狀態標籤：status--active 進行中／status--exp 實驗中／status--done 已完成／status--live 上線中 -->
+    <section class="section" id="projects" aria-labelledby="projects-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="section-label"><span>02</span>Projects</p>
+          <h2 id="projects-title">作品</h2>
+          <p class="section-intro">做完的、正在做的，還有還在實驗的東西。</p>
+        </header>
+
+        <div class="project-grid">
+          <article class="card project" data-reveal>
+            <div class="project-top">
+              <span class="project-kind">AI × 群聊</span>
+              <span class="status status--active">進行中</span>
+            </div>
+            <h3 class="project-title">人設群聊 Bot</h3>
+            <p class="project-summary">基於 NapCat（OneBot v11）與大模型的群聊機器人。用結構化的人設文件和記憶模組，讓回覆更貼近角色的語氣，也記得群友的稱呼和聊過的話題。</p>
+            <ol class="flow" aria-label="運作流程">
+              <li>群訊息</li>
+              <li>NapCat / OneBot v11</li>
+              <li class="flow-split"><span>人設 Prompt</span><span>記憶模組</span></li>
+              <li>角色化回覆</li>
+            </ol>
+            <details class="project-more">
+              <summary>做了什麼</summary>
+              <ul>
+                <li>把性格、口癖、情緒邊界拆成結構化的人設文件。</li>
+                <li>用記憶模組記下群友的稱呼和聊過的話題。</li>
+                <li>調整觸發門檻與冷卻時間，避免洗版。</li>
+              </ul>
+            </details>
+            <div class="project-foot">
+              <ul class="chips" aria-label="使用的技術">
+                <li>Python</li><li>OneBot v11</li><li>NapCat</li><li>MCP</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card project" data-reveal>
+            <div class="project-top">
+              <span class="project-kind">AI × 遊戲</span>
+              <span class="status status--exp">實驗中</span>
+            </div>
+            <h3 class="project-title">MC 模組服 AI 夥伴</h3>
+            <p class="project-summary">以 Mindcraft / Mineflayer 為基礎，讓大模型驅動、帶有人設的 AI 角色進入 Forge 1.19.2 模組服，一起採集、建造和聊天。最大的難關是 Forge 登入階段的握手，目前用一層代理來處理。</p>
+            <ol class="flow" aria-label="運作流程">
+              <li>LLM + 人設</li>
+              <li class="flow-both">Mineflayer 動作</li>
+              <li>Forge 握手代理</li>
+              <li>Forge 1.19.2 伺服器</li>
+            </ol>
+            <details class="project-more">
+              <summary>做了什麼</summary>
+              <ul>
+                <li>研究 Forge 1.19.2 登入階段的握手流程，用代理轉發並回應。</li>
+                <li>把角色人設和遊戲內動作（跟隨、採集、建造）結合起來。</li>
+                <li>提供 Docker 執行環境，方便快速拉起實例。</li>
+              </ul>
+            </details>
+            <div class="project-foot">
+              <ul class="chips" aria-label="使用的技術">
+                <li>Node.js</li><li>Mineflayer</li><li>Forge 1.19.2</li><li>LLM</li><li>Docker</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card project" data-reveal>
+            <div class="project-top">
+              <span class="project-kind">自動化 × 資料</span>
+              <span class="status status--done">已完成</span>
+            </div>
+            <h3 class="project-title">表格流水線 Python 重構</h3>
+            <p class="project-summary">把一套用 Power Query（M 語言）寫的多表處理流程，改寫成 pandas + openpyxl 的模組化 Python 專案，支援依資料夾批次讀取、關鍵字去重與類目對應。</p>
+            <ol class="flow" aria-label="處理流程">
+              <li>config.yaml + Excel 資料夾</li>
+              <li class="flow-split"><span>類目對應</span><span>關鍵字清洗</span><span>流水合併</span></li>
+              <li>DataFrame / Excel</li>
+            </ol>
+            <details class="project-more">
+              <summary>做了什麼</summary>
+              <ul>
+                <li>用 config.yaml 管理路徑，不再寫死在程式裡。</li>
+                <li>每一步都是回傳 DataFrame 的函式，方便單獨測試。</li>
+                <li>用 pytest 覆蓋空值、重複鍵等邊界情況。</li>
+              </ul>
+            </details>
+            <div class="project-foot">
+              <ul class="chips" aria-label="使用的技術">
+                <li>Python</li><li>pandas</li><li>openpyxl</li><li>YAML</li><li>pytest</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="card project" data-reveal>
+            <div class="project-top">
+              <span class="project-kind">網站</span>
+              <span class="status status--live">上線中</span>
+            </div>
+            <h3 class="project-title">ashiyachion.me</h3>
+            <p class="project-summary">你正在看的這個網站。從零手寫的 HTML、CSS 和一點 JavaScript，沒有框架、不用建置，推上 GitHub Pages 就上線。</p>
+            <ol class="flow" aria-label="運作流程">
+              <li>index.html</li>
+              <li>style.css + main.js</li>
+              <li>GitHub Pages</li>
+              <li>ashiyachion.me</li>
+            </ol>
+            <details class="project-more">
+              <summary>做了什麼</summary>
+              <ul>
+                <li>深淺色主題會跟隨系統，也可以手動切換。</li>
+                <li>深色模式有一片慢慢閃爍的星空，偶爾還有流星。</li>
+                <li>「正在循環」的歌會依台北時間自動挑選。</li>
+              </ul>
+            </details>
+            <div class="project-foot">
+              <ul class="chips" aria-label="使用的技術">
+                <li>HTML</li><li>CSS</li><li>JavaScript</li><li>GitHub Pages</li>
+              </ul>
+              <a class="project-link" href="https://github.com/ashiyachion/rochienn.github.io" target="_blank" rel="noopener">
+                原始碼
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
               </a>
             </div>
-            <p class="track-note" id="track-note"></p>
-            <ol class="mini-playlist" id="mini-playlist" aria-label="歌单"></ol>
-          </div>
-        </article>
-
-        <!-- 技术栈 -->
-        <article class="bento-card card-col-4" aria-labelledby="skills-heading">
-          <div class="card-header-mini">
-            <h2 class="card-label" id="skills-heading">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              <span>常用工具</span>
-            </h2>
-          </div>
-          <div class="skill-group-list" id="skills-matrix"></div>
-        </article>
-
-        <!-- 直播观测 -->
-        <article class="bento-card card-col-4" aria-labelledby="vup-heading">
-          <div class="card-header-mini">
-            <h2 class="card-label" id="vup-heading">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-              <span>虚拟偶像观测站</span>
-            </h2>
-          </div>
-          <div class="vup-tabs" role="tablist" aria-label="观测分类">
-            <button type="button" class="vup-tab active" data-vup-tab="routine" role="tab" aria-selected="true" aria-controls="vup-panel-content" tabindex="0">追播</button>
-            <button type="button" class="vup-tab" data-vup-tab="craft" role="tab" aria-selected="false" aria-controls="vup-panel-content" tabindex="-1">应援</button>
-            <button type="button" class="vup-tab" data-vup-tab="clips" role="tab" aria-selected="false" aria-controls="vup-panel-content" tabindex="-1">切片</button>
-          </div>
-          <div class="vup-panel-content" id="vup-panel-content" role="tabpanel"></div>
-        </article>
-
-        <!-- 小站日志 -->
-        <article class="bento-card card-col-4" aria-labelledby="log-heading">
-          <div class="card-header-mini">
-            <h2 class="card-label" id="log-heading">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              <span>小站日志</span>
-            </h2>
-          </div>
-          <dl class="telemetry-stats">
-            <div class="stat-box"><dt class="stat-label">运行天数</dt><dd class="stat-value mono" id="stat-days">-</dd></div>
-            <div class="stat-box"><dt class="stat-label">项目</dt><dd class="stat-value mono" id="stat-projects">-</dd></div>
-            <div class="stat-box"><dt class="stat-label">随笔</dt><dd class="stat-value mono" id="stat-notes">-</dd></div>
-          </dl>
-          <ol class="changelog-list" id="changelog-list" aria-label="更新日志"></ol>
-        </article>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section id="projects" aria-labelledby="projects-heading">
-      <div class="section-header">
-        <div class="section-title-group">
-          <span class="section-eyebrow mono">Side Projects</span>
-          <h2 class="section-title" id="projects-heading">慢慢学着做的小项目</h2>
-          <p class="section-subtitle">遇到麻烦就写点代码解决，顺便把过程记下来。</p>
-        </div>
-        <div class="filter-bar" id="project-filters" aria-label="按分类筛选项目"></div>
+    <!-- ===== 03 單曲循環 =====
+         data-hours="開始-結束"：台北時間（24 小時制），這個時段內頁首會顯示這首歌「正在循環」。
+         例如 data-hours="22-6" 代表 22:00 到隔天 06:00。 -->
+    <section class="section" id="music" aria-labelledby="music-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="section-label"><span>03</span>On Repeat</p>
+          <h2 id="music-title">最近單曲循環</h2>
+          <p class="section-intro">寫程式時的背景音樂。頁首「正在循環」的那一首，會依台北時間自動挑選。</p>
+        </header>
+
+        <ol class="tracklist" data-reveal>
+          <li class="track" data-track data-hours="10-17">
+            <span class="track-no"><span class="num">01</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+            <span class="track-main">
+              <span class="track-title" lang="ja">群青</span>
+              <span class="track-artist" lang="ja">YOASOBI</span>
+            </span>
+            <span class="track-note">卡在奇怪的 bug 裡時，副歌一響就能找回節奏。</span>
+            <span class="track-mood">寫程式 · 鼓點驅動</span>
+          </li>
+          <li class="track" data-track data-hours="17-22">
+            <span class="track-no"><span class="num">02</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+            <span class="track-main">
+              <span class="track-title" lang="ja">花に亡霊</span>
+              <span class="track-artist" lang="ja">ヨルシカ</span>
+            </span>
+            <span class="track-note">乾淨的吉他前奏，適合寫完東西之後單曲循環。</span>
+            <span class="track-mood">傍晚 · 放空</span>
+          </li>
+          <li class="track" data-track data-hours="6-10">
+            <span class="track-no"><span class="num">03</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+            <span class="track-main">
+              <span class="track-title" lang="ja">踊り子</span>
+              <span class="track-artist" lang="ja">Vaundy</span>
+            </span>
+            <span class="track-note">貝斯線很耐聽，歌回裡也常常聽到翻唱。</span>
+            <span class="track-mood">通勤 · 低頻律動</span>
+          </li>
+          <li class="track" data-track data-hours="22-6">
+            <span class="track-no"><span class="num">04</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+            <span class="track-main">
+              <span class="track-title" lang="ja">ミラーチューン</span>
+              <span class="track-artist" lang="ja">ずっと真夜中でいいのに。</span>
+            </span>
+            <span class="track-note">節奏密集卻不吵，適合需要專心往前推的時候。</span>
+            <span class="track-mood">深夜 · 高密度</span>
+          </li>
+        </ol>
       </div>
-      <div class="projects-grid" id="projects-grid"></div>
     </section>
 
-    <section id="notes" aria-labelledby="notes-heading">
-      <div class="section-header">
-        <div class="section-title-group">
-          <span class="section-eyebrow mono">Notes</span>
-          <h2 class="section-title" id="notes-heading">随笔</h2>
-          <p class="section-subtitle">折腾记录、建站日志，和一些听歌看直播时的想法。</p>
+    <!-- ===== 04 工具箱 ===== -->
+    <section class="section" id="toolbox" aria-labelledby="toolbox-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="section-label"><span>04</span>Toolbox</p>
+          <h2 id="toolbox-title">工具箱</h2>
+          <p class="section-intro">平常順手的語言、函式庫和工具。</p>
+        </header>
+
+        <div class="toolbox-grid">
+          <div class="card tool-group tool-group--a" data-reveal>
+            <h3>腳本與資料</h3>
+            <ul class="chips">
+              <li>Python</li><li>pandas</li><li>openpyxl</li><li>YAML</li><li>pytest</li>
+            </ul>
+          </div>
+          <div class="card tool-group tool-group--b" data-reveal>
+            <h3>Bot 與 AI</h3>
+            <ul class="chips">
+              <li>LLM Prompt</li><li>OneBot v11</li><li>NapCat</li><li>Mineflayer</li><li>MCP</li>
+            </ul>
+          </div>
+          <div class="card tool-group tool-group--c" data-reveal>
+            <h3>前端與工具</h3>
+            <ul class="chips">
+              <li>HTML / CSS</li><li>JavaScript</li><li>Node.js</li><li>Git</li><li>Docker</li>
+            </ul>
+          </div>
         </div>
-        <div class="filter-bar" id="note-filters" aria-label="按分类筛选随笔"></div>
       </div>
-      <div class="notes-layout" id="notes-grid"></div>
     </section>
 
-    <section id="about-site" aria-labelledby="about-heading">
-      <div class="manifesto-banner">
-        <div class="manifesto-text">
-          <span class="section-eyebrow mono">About</span>
-          <h2 class="manifesto-title" id="about-heading">关于这个网站</h2>
-          <p class="manifesto-desc">
-            本站由 GitHub Pages 托管，域名通过 GitHub 学生包免费注册。纯静态页面，没有统计脚本，也不收集任何访问数据。内容会慢慢更新。
-          </p>
-        </div>
-        <div class="manifesto-actions">
-          <a data-github-link hidden target="_blank" rel="noopener noreferrer" class="btn btn-primary">访问 GitHub</a>
-          <a href="#overview" class="btn btn-secondary">回到顶部</a>
+    <!-- ===== 05 聯絡 ===== -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact-card" data-reveal>
+          <p class="section-label"><span>05</span>Contact</p>
+          <h2 id="contact-title">想聊聊歌、Bot，<br>或是 Minecraft？</h2>
+          <p class="contact-text">目前最容易找到我的地方是 GitHub，歡迎來逛逛。</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://github.com/ashiyachion" target="_blank" rel="noopener">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+              @ashiyachion
+            </a>
+            <!-- 想公開信箱的話，拿掉這段註解，再換成你的 Email：
+            <a class="btn btn-ghost" href="mailto:you@example.com">寄信給我</a>
+            -->
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
-      <span>&copy; <span id="footer-year">2026</span> ashiya · ashiyachion.me</span>
-      <span class="footer-hint">按 <kbd class="cmd-kbd mono">Ctrl K</kbd> 搜索全站</span>
+    <div class="container footer-inner">
+      <p>© <span data-year>2026</span> ashiya · 手寫 HTML 與 CSS，住在 GitHub Pages。</p>
+      <p>
+        <a href="https://github.com/ashiyachion/rochienn.github.io" target="_blank" rel="noopener">原始碼</a>
+        <span aria-hidden="true"> · </span>
+        <a href="#top">回到頁首 ↑</a>
+      </p>
     </div>
   </footer>
-
-  <!-- 阅读器（文章 / 项目详情） -->
-  <div class="modal-overlay" id="reader-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-window">
-      <div class="modal-topbar">
-        <div class="modal-badge-group">
-          <span class="note-category" id="modal-badge"></span>
-          <span class="mono" id="modal-submeta"></span>
-        </div>
-        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="关闭（Esc）">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h2 class="reader-title" id="modal-title"></h2>
-        <div class="reader-content" id="modal-content"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 命令面板 -->
-  <div class="modal-overlay" id="cmd-modal" role="dialog" aria-modal="true" aria-label="搜索" aria-hidden="true">
-    <div class="modal-window cmd-window">
-      <div class="cmd-input-wrap">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="cmd-input-icon" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" class="cmd-input" id="cmd-input" placeholder="搜索文章、项目、歌曲或操作" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="cmd-results" aria-autocomplete="list" />
-        <kbd class="cmd-kbd mono">Esc</kbd>
-      </div>
-      <ul class="cmd-results" id="cmd-results" role="listbox" aria-label="搜索结果"></ul>
-      <div class="cmd-footer mono">
-        <span><kbd class="cmd-kbd">↑</kbd><kbd class="cmd-kbd">↓</kbd> 选择</span>
-        <span><kbd class="cmd-kbd">Enter</kbd> 打开</span>
-      </div>
-    </div>
-  </div>
-
-  <script src="./assets/js/data.js"></script>
-  <script src="./assets/js/app.js"></script>
 </body>
 </html>
